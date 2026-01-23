@@ -1,0 +1,4 @@
+/.venv
+/models
+/test.wav
+/__pycache__
