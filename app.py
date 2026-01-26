@@ -1,7 +1,11 @@
 import requests
 import piper_test
+import openai
 
-openai_compatible_api = "http://a1yvl114:8080/v1/chat/completions"
+client = openai.OpenAI(
+    base_url="http://localhost:8080/v1", # "http://<Your api-server IP>:port"
+    api_key = "sk-no-key-required"
+)
 
 def speech_to_text(audio_file_path):
     """
@@ -26,15 +30,20 @@ def generate_response(messages=[]):
         list: Updated list of messages including the assistant's response.
     """
     # Example implementation (to be replaced with actual logic)
-    response = "This is a generated response based on the provided messages."
-    r = requests.post(
-        url=openai_compatible_api,
-        json={
-            "model": "gpt-3.5-turbo",
-            "messages": messages
-        }
-    )
-    response = r.json()['choices'][0]['message']['content']
+    response = ""
+
+    stream = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
+        stream=True
+        )
+    
+    for event in stream:
+        if event.choices[0].delta.content is not None:
+            print(event.choices[0].delta.content, end='', flush=True)
+            response += event.choices[0].delta.content
+    
+    #response = r.json()['choices'][0]['message']['content']
     new_messages = messages + [{"role": "assistant", "content": response}]
     
     return new_messages
@@ -71,6 +80,6 @@ if __name__ == "__main__":
             },
             "history": history
         }
+        print("Assistant:", end=' ', flush=True)
         history = send_message(chat)
         piper_test.speak(history[-1]['content'])
-        print("Assistant:", history[-1]['content'])
