@@ -43,7 +43,9 @@ def generate_response(messages=[]):
             print(event.choices[0].delta.content, end='', flush=True)
             response += event.choices[0].delta.content
     
-    #response = r.json()['choices'][0]['message']['content']
+    if not response.endswith('\n'):
+        print("")
+
     new_messages = messages + [{"role": "assistant", "content": response}]
     
     return new_messages
