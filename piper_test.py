@@ -1,12 +1,18 @@
-import wave
 from piper import PiperVoice
-import simpleaudio as sa
+import sounddevice as sd
+
+voice = PiperVoice.load("models/voice/fi_FI-harri-medium.onnx")
+sample_rate = voice.config.sample_rate
 
 def speak(text: str):
-    voice = PiperVoice.load("models/voice/fi_FI-harri-medium.onnx")
-    with wave.open("test.wav", "wb") as wav_file:
-        voice.synthesize_wav(text, wav_file)
+    with sd.OutputStream(samplerate=sample_rate, channels=1) as stream:
+        for chunk in PiperVoice.synthesize(voice, text):
+            stream.write(chunk.audio_float_array)
 
-    wave_obj = sa.WaveObject.from_wave_file("test.wav")
-    play_obj = wave_obj.play()
-    play_obj.wait_done()  # blocks until finished
+
+if __name__ == "__main__":
+    while True:
+        user_input = input("Enter text to speak (or 'exit' to quit): ")
+        if user_input.lower() == 'exit':
+            break
+        speak(user_input)
