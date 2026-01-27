@@ -1,23 +1,11 @@
-import requests
-import piper_test
-import openai
+from text_to_speech import speak
+from speech_to_text import transcribe
+from openai import OpenAI
 
-client = openai.OpenAI(
+client = OpenAI(
     base_url="http://localhost:8080/v1", # "http://<Your api-server IP>:port"
     api_key = "sk-no-key-required"
 )
-
-def speech_to_text(audio_file_path):
-    """
-    Send a message using speech-to-text conversion.
-    Args:
-        audio_file_path (str): The path to the audio file.
-    Returns:
-        str: The transcribed text from the audio file.
-    """
-    # Example implementation (to be replaced with actual logic)
-    transcribed_text = "This is the transcribed text from the audio file."
-    return transcribed_text
 
 def generate_response(messages=[]):
     """
@@ -65,7 +53,7 @@ def send_message(chat = {"message": {}, "history": []}):
     if chat["message"]["type"] == "text":
         text = chat["message"]["content"]
     elif chat["message"]["type"] == "audio":
-        text = speech_to_text(chat["message"]["content"])
+        text = transcribe(chat["message"]["content"])
 
     new_messages = chat["history"] + [{"role": "user", "content": text}]
     response = generate_response(messages=new_messages)
@@ -84,4 +72,4 @@ if __name__ == "__main__":
         }
         print("Assistant:", end=' ', flush=True)
         history = send_message(chat)
-        piper_test.speak(history[-1]['content'])
+        speak(history[-1]['content'])

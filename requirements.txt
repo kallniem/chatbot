@@ -1,3 +1,4 @@
-piper-tts
-requests
 sounddevice
+piper-tts
+openai
+openai-whisper

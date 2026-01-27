@@ -216,5 +216,10 @@ __marimo__/
 .streamlit/secrets.toml
 
 # --- IGNORE ---
-models/voice/*
-/*.wav
+*.wav
+*.mp3
+models/*/*.onnx
+models/*/*.json
+models/*/*.pt
+models/*/*.pth
+models/*/*.bin
