@@ -1,11 +1,19 @@
 from text_to_speech import speak
 from speech_to_text import transcribe
-from openai import OpenAI
+from openai import OpenAI, APIConnectionError
 
 client = OpenAI(
     base_url="http://localhost:8080/v1", # "http://<Your api-server IP>:port"
     api_key = "sk-no-key-required"
 )
+
+print("🔄️ Test API connection", end="\r")
+try:
+    client.models.list()
+    print("✅ Valid OpenAI compatible API server connection")
+except APIConnectionError:
+    print(f'❌ Could not connect to "{client.base_url}".')
+    exit(1)
 
 def generate_response(messages=[]):
     """
@@ -21,7 +29,7 @@ def generate_response(messages=[]):
     response = ""
 
     stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",
+        model="gemma-4-E4B-it-Q4_K_M",
         messages=messages,
         stream=True
         )
