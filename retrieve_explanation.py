@@ -4,9 +4,7 @@ import json
 quiz = json.load(open('questions.json'))
 
 def ask_lawrence(question, transcription):
-    myArray = []
-    myArray.append(question)
-    matches = find_semantic_matches(transcription, myArray, threshold=0.45)
+    matches = find_semantic_matches(transcription, [question], threshold=0.45)
     for match in matches:
         print(f"✅ Proceeding to retrieve traffic legislation for question: {match['keyword']}")
     if not matches:

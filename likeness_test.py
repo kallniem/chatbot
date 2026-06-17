@@ -1,14 +1,14 @@
 from openai import OpenAI
 import numpy as np
 
-EMBEDDING_MODEL = "text-embedding-3-small"
+EMBEDDING_MODEL = "embeddinggemma-300M-Q8_0.gguf"
 SIMILARITY_THRESHOLD = 0.45
 
 KEYWORDS = ["endless", "dull", "manipulative", "beautiful", "pristine"]
 SENTENCE = "She will lie, cheat and do anything in her power to deceive you."
 
 client = OpenAI(
-    base_url="http://192.168.178.22:8080/v1", # "http://<Your api-server IP>:port"
+    base_url="http://localhost:8080/v1", # "http://<Your api-server IP>:port"
     api_key = "sk-no-key-required"
 )
 
